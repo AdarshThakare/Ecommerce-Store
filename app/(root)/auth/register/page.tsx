@@ -21,41 +21,49 @@ import { LoadingButton } from "@/components/ui/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { USER_REGISTER } from "@/routes/UserRoute";
+import { USER_LOGIN, USER_REGISTER } from "@/routes/UserRoute";
 
-const page = () => {
+const RegisterPage = () => {
   // Needed States
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   // select only the required fields for the login form
   const formSchema = zodSchema
     .pick({
+      name: true,
       email: true,
+      password: true,
     })
     .extend({
-      password: z.string().min(3, { message: "Password is required" }),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Password and Confirm Password fields must be the same.",
+      path: ["confirmPassword"],
     });
 
   // use the form schema with react-hook-form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   //to handle form submission for login
-  const onHandleLoginSubmit = async (value: z.infer<typeof formSchema>) => {
-    console.log("Login Form Submitted", value);
+  const onHandleRegisterSubmit = async (value: z.infer<typeof formSchema>) => {
+    console.log("Registeration Form Submitted", value);
   };
-
   return (
     <>
       {/* Background Slides */}
-      <div className="bg-slide-login"></div>
-      <div className="bg-slide-login bg2"></div>
-      <div className="bg-slide-login bg3"></div>
+      <div className="bg-slide-register"></div>
+      <div className="bg-slide-register bg2"></div>
+      <div className="bg-slide-register bg3"></div>
       <Card className="opacity-80 ">
         <CardContent>
           <div className="flex justify-center">
@@ -68,9 +76,9 @@ const page = () => {
             />
           </div>
           <div className="text-center">
-            <h1 className="text-3xl font-bold mt-3">Login Into Account</h1>
+            <h1 className="text-3xl font-bold mt-3">Create an Account</h1>
             <p className={`${carme.className} mt-1`}>
-              Log into your account by filling the form below.
+              Create new account by filling the form below.
             </p>
           </div>
 
@@ -78,9 +86,34 @@ const page = () => {
           <div>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onHandleLoginSubmit)}
+                onSubmit={form.handleSubmit(onHandleRegisterSubmit)}
                 className="mt-6"
               >
+                <div className="mb-3">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel
+                          className={`${carme.className} text-md tracking-wider`}
+                        >
+                          Full Name -
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter your name"
+                            className={`${carme.className} text-md tracking-wide `}
+                            {...field}
+                          />
+                        </FormControl>
+                        {/* To display validation messages */}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <div className="mb-3">
                   <FormField
                     control={form.control}
@@ -142,31 +175,48 @@ const page = () => {
                     )}
                   />
                 </div>
-                <div className={`ms-1 text-sm -mt-3 mb-4 ${carme.className}`}>
-                  <span>Forgot your Password ?</span>
-                  <Link
-                    href="/auth/register"
-                    className="text-primary ml-3 hover:font-semibold hover:underline"
-                  >
-                    Reset Password
-                  </Link>
+                <div className="mb-3">
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel
+                          className={`${carme.className} text-md tracking-wider`}
+                        >
+                          Confirm Password -
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="Confirm your password"
+                            className={`${carme.className} text-md tracking-wide `}
+                            {...field}
+                          />
+                        </FormControl>
+
+                        {/* To display validation messages */}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
                 <div>
                   <LoadingButton
                     isLoading={isLoading}
                     type="submit"
-                    text="Login"
+                    text="Register"
                     onClick={() => {}}
                     className="w-full text-lg py-5 cursor-pointer"
                   />
                 </div>
                 <div className={`mt-4 text-center ${carme.className}`}>
-                  <p>Don't have an Account yet ?</p>
+                  <p>Already have an Account ?</p>
                   <Link
-                    href={USER_REGISTER}
+                    href={USER_LOGIN}
                     className="text-primary ml-3 hover:font-semibold hover:underline"
                   >
-                    Create your Account
+                    Login to Account
                   </Link>
                 </div>
               </form>
@@ -178,4 +228,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default RegisterPage;
