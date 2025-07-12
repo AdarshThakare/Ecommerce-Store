@@ -21,7 +21,8 @@ import { LoadingButton } from "@/components/ui/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { USER_LOGIN, USER_REGISTER } from "@/routes/UserRoute";
+import { USER_LOGIN } from "@/routes/UserRoute";
+import axios from "axios";
 
 const RegisterPage = () => {
   // Needed States
@@ -57,6 +58,29 @@ const RegisterPage = () => {
   //to handle form submission for login
   const onHandleRegisterSubmit = async (value: z.infer<typeof formSchema>) => {
     console.log("Registeration Form Submitted", value);
+
+    try {
+      setIsLoading(true);
+      const { data: registerResponse } = await axios.post(
+        "/api/auth/register",
+        value
+      );
+
+      if (!registerResponse.success) {
+        throw new Error(registerResponse.message);
+      }
+
+      form.reset();
+      console.log(registerResponse.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert("An unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <>

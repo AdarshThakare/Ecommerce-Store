@@ -1,4 +1,4 @@
-export const emailVerificationLink = (link: string) => {
+const emailVerificationLink = (link: string) => {
   const html = `
   <!DOCTYPE html>
   <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -235,3 +235,5 @@ export const emailVerificationLink = (link: string) => {
 
   return html;
 };
+
+export default emailVerificationLink;

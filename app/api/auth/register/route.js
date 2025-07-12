@@ -1,4 +1,4 @@
-import { ZodSchema } from "zod/v3";
+import zodSchema from "../../../../lib/zodSchema";
 import connectDB from "../../../../lib/db";
 import { NextResponse } from "next/server";
 import User from "../../../../models/user.model";
@@ -13,7 +13,7 @@ export async function POST(request) {
     await connectDB();
 
     // validation schema
-    const validationSchema = ZodSchema.pick({
+    const validationSchema = zodSchema.pick({
       name: true,
       email: true,
       password: true,
@@ -86,6 +86,12 @@ export async function POST(request) {
       data: newUser,
     });
   } catch (err) {
-    catchError(err);
+    return NextResponse.json({
+      success: false,
+      message:
+        typeof err === "object" && err !== null && "message" in err
+          ? err.message
+          : String(err),
+    });
   }
 }

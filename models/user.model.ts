@@ -7,7 +7,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: ["user", "admin"],
-      required: true,
       default: "user",
     },
     name: {
@@ -30,12 +29,10 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       url: {
         type: String,
-        required: true,
         trim: true,
       },
       public_id: {
         type: String,
-        required: true,
         trim: true,
       },
     },
@@ -72,6 +69,8 @@ UserSchema.methods = {
   },
 };
 
-const User = mongoose.model("User", UserSchema, "users");
+// ✅ Only create model if it hasn't been compiled already
+const User =
+  mongoose.models.User || mongoose.model("User", UserSchema, "users");
 
 export default User;
