@@ -1,5 +1,6 @@
 import { Loader2 } from "lucide-react";
 import { Button } from "../button";
+import { cn } from "@/lib/utils";
 
 type LoadingButtonProps = {
   isLoading: boolean;
@@ -23,9 +24,10 @@ export const LoadingButton = ({
       onClick={onClick}
       disabled={isLoading}
       {...ButtonProps}
-      className={className}
+      className={cn("", className)}
     >
-      {isLoading ? <Loader2 className="animate-spin mr-2" /> : <p>{text}</p>}
+      {isLoading && <Loader2 className="animate-spin mr-2" />}
+      <span>{text}</span>
     </Button>
   );
 };
