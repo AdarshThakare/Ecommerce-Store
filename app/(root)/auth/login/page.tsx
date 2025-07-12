@@ -1,9 +1,8 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import Logo from "@/public/assets/images/logo-black.png";
 import Image from "next/image";
-import { carme } from "@/app/layout";
 import { useForm } from "react-hook-form";
 import zodSchema from "@/lib/zodSchema";
 import z from "zod";
@@ -22,10 +21,12 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import { USER_REGISTER } from "@/routes/UserRoute";
+import { carme } from "@/lib/fonts";
 
-const page = () => {
+const LoginPage = () => {
   // Needed States
   const [isLoading, setIsLoading] = useState(false);
+  console.log(setIsLoading);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // select only the required fields for the login form
   const formSchema = zodSchema
@@ -161,7 +162,7 @@ const page = () => {
                   />
                 </div>
                 <div className={`mt-4 text-center ${carme.className}`}>
-                  <p>Don't have an Account yet ?</p>
+                  <p>Don&apos;t have an Account yet ?</p>
                   <Link
                     href={USER_REGISTER}
                     className="text-primary ml-3 hover:font-semibold hover:underline"
@@ -178,4 +179,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default LoginPage;

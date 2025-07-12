@@ -1,9 +1,8 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import Logo from "@/public/assets/images/logo-black.png";
 import Image from "next/image";
-import { carme } from "@/app/layout";
 import { useForm } from "react-hook-form";
 import zodSchema from "@/lib/zodSchema";
 import z from "zod";
@@ -23,6 +22,7 @@ import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import { USER_LOGIN } from "@/routes/UserRoute";
 import axios from "axios";
+import { carme } from "@/lib/fonts";
 
 const RegisterPage = () => {
   // Needed States

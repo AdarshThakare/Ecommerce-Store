@@ -9,7 +9,11 @@ type ResponseProp = {
 
 type ErrorProp = {
   customMessage: string;
-  error: any;
+  error: {
+    code: number;
+    message: string;
+    keyPattern: string;
+  };
 };
 
 export const response = ({
@@ -50,7 +54,7 @@ export const catchError = ({ error, customMessage }: ErrorProp) => {
   return response({
     success: false,
     statusCode: 500,
-    message: error.code,
+    message: String(error.code),
     data: errorObj,
   });
 };

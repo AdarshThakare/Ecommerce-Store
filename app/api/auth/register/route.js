@@ -6,7 +6,6 @@ import { TextEncoder } from "util";
 import { SignJWT } from "jose";
 import sendMail from "../../../../lib/sendMail";
 import emailVerificationLink from "../../../../emailTemplates/emailVerificationLink";
-import { catchError } from "../../../../lib/requestHelper";
 
 export async function POST(request) {
   try {
