@@ -12,7 +12,7 @@ const sendMail = async (subject: string, receiver: string, body: string) => {
     },
   } as SMTPTransport.Options);
   const options = {
-    from: `"Adarsh Thakare <${process.env.NODEMAILER_EMAIL}>"`,
+    from: `"Adarsh Thakare"`,
     to: receiver,
     subject: subject,
     html: body,

@@ -94,12 +94,13 @@ const emailVerificationLink = (link: string) => {
   </head>
   
   <body class="body"
-      style="background-color: #FFFFFF; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
-      <table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation"
+      style="background-color: #FFFFFF; margin: 0; padding: 10; -webkit-text-size-adjust: none; text-size-adjust: none;">
+      <table border="0" cellpadding="5" cellspacing="5" class="nl-container" role="presentation"
           style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF;" width="100%">
           <tbody>
               <tr>
                   <td>
+                        <br>
                       <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1"
                           role="presentation"
                           style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f5f5f5; padding:50px 0;"
@@ -123,6 +124,9 @@ const emailVerificationLink = (link: string) => {
                                                           <tr>
                                                               <td class="pad"
                                                                   style="padding-bottom:5px;padding-left:5px;padding-right:5px;width:100%;">
+                                                                                          <br>                        <br>
+
+
                                                                   <div align="center" class="alignment"
                                                                       style="line-height:10px">
                                                                       <div style="max-width: 250px;"><img
@@ -140,6 +144,9 @@ const emailVerificationLink = (link: string) => {
                                                           width="100%">
                                                           <tr>
                                                               <td class="pad" style="text-align:center;width:100%;">
+                                                                                      <br>
+                        <br>
+                                                
                                                                   <h1
                                                                       style="margin: 0; color: #393d47; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 25px; font-weight: normal; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 30px;">
                                                                       <strong>Email Verification</strong>
@@ -153,6 +160,10 @@ const emailVerificationLink = (link: string) => {
                                                           width="100%">
                                                           <tr>
                                                               <td class="pad">
+                                                                                      <br>
+
+                            
+
                                                                   <div
                                                                       style="color:#393d47;font-family:Tahoma,Verdana,Segoe,sans-serif;font-size:14px;line-height:150%;text-align:center;mso-line-height-alt:21px;">
                                                                       <p style="margin: 0; word-break: break-word;">We
@@ -169,6 +180,9 @@ const emailVerificationLink = (link: string) => {
                                                           width="100%">
                                                           <tr>
                                                               <td class="pad">
+                                                                          
+                        <br>
+
                                                                   <h4
                                                                       style="margin: 0; color: #7747FF; direction: ltr; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 45.6px;">
   
@@ -185,11 +199,14 @@ const emailVerificationLink = (link: string) => {
                                                           width="100%">
                                                           <tr>
                                                               <td class="pad">
+                                                                                      <br>
+                        <br>
+
                                                                   <div
                                                                       style="color:#393d47;font-family:Tahoma,Verdana,Segoe,sans-serif;font-size:14px;line-height:150%;text-align:center;mso-line-height-alt:21px;">
                                                                       <p style="margin: 0; word-break: break-word;">If the button above doesn’t work, you can copy and
                                                                           paste the following link into your browser:</p>
-                                                                        
+                                                                         <br>
                                                                           <a href="${link}">${link}</a>
                                                                   </div>
                                                               </td>
@@ -202,14 +219,15 @@ const emailVerificationLink = (link: string) => {
                                                           <tr>
                                                               <td class="pad"
                                                                   style="padding-bottom:5px;padding-left:10px;padding-right:10px;padding-top:10px;">
+                                                                  <br>
+                                                                      <br>
                                                                   <div
                                                                       style="color:#393d47;font-family:Tahoma,Verdana,Segoe,sans-serif;font-size:13px;line-height:150%;text-align:center;mso-line-height-alt:19.5px;">
                                                                       <p style="margin: 10px;"><strong>Note:</strong> This link will expire in 1 hours. If you did not create an account, you can safely ignore this email.</p>
                                                                            
                                                                       <p style="margin: 0;">Thank you,<br />
-                                                                          <a href="https://www.youtube.com/@developergoswami"
-                                                                              target="_blank">Developer
-                                                                              Goswami</a>
+                                                                          <a href="https://www.linkedin.com/in/adarshthakare/"
+                                                                              target="_blank">Adarsh Thakare</a>
                                                                       </p>
                                                                   </div>
                                                               </td>

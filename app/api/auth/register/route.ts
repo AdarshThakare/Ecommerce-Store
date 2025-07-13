@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const { name, email, password } = validatedData.data;
 
     //if user already exists
-    let existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return NextResponse.json({

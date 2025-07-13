@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoadingButton } from "@/components/ui/application/LoadingButton";
+import { LoadingButton } from "@/components/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
@@ -71,7 +71,7 @@ const RegisterPage = () => {
       }
 
       form.reset();
-      console.log(registerResponse.message);
+      alert(registerResponse.message);
     } catch (err) {
       if (err instanceof Error) {
         alert(err.message);
