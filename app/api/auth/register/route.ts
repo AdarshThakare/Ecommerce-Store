@@ -7,7 +7,7 @@ import { SignJWT } from "jose";
 import sendMail from "../../../../lib/sendMail";
 import emailVerificationLink from "../../../../emailTemplates/emailVerificationLink";
 
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     await connectDB();
 
@@ -33,7 +33,7 @@ export async function POST(request) {
     const { name, email, password } = validatedData.data;
 
     //if user already exists
-    const existingUser = await User.exists({ email });
+    let existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return NextResponse.json({
@@ -45,7 +45,7 @@ export async function POST(request) {
     }
 
     // to register new user
-    const newUser = await User({
+    const newUser = await new User({
       name,
       email,
       password,
@@ -74,7 +74,7 @@ export async function POST(request) {
       "Email Verification request from Adarsh Thakare",
       email,
       emailVerificationLink(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/verify-email/${token}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`
       )
     );
 

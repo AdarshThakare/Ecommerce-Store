@@ -19,7 +19,7 @@ export async function GET() {
   } catch (err) {
     return NextResponse.json({
       success: false,
-      message: err.message,
+      message: err instanceof Error ? err.message : String(err),
       error: "INTERNAL SERVER ERROR to Connect to database",
     });
   }
