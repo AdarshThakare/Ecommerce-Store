@@ -1,9 +1,4 @@
-import { Slide, toast } from "react-toastify";
-
-type ToastProps = {
-  type: string;
-  message: string;
-};
+import { Flip, Slide, toast, Zoom } from "react-toastify";
 
 import type { ToastPosition } from "react-toastify";
 
@@ -19,7 +14,7 @@ type optionProps = {
   transition: typeof Slide;
 };
 
-export const showToast = ({ type, message }: ToastProps) => {
+export const showToast = (type: string, message: string) => {
   let options: optionProps = {
     position: "top-right",
     autoClose: 5000,
@@ -29,7 +24,7 @@ export const showToast = ({ type, message }: ToastProps) => {
     draggable: true,
     progress: undefined,
     theme: "dark",
-    transition: Slide,
+    transition: Flip,
   };
 
   switch (type) {

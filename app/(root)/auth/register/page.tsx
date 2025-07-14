@@ -23,6 +23,7 @@ import Link from "next/link";
 import { USER_LOGIN } from "@/routes/UserRoute";
 import axios from "axios";
 import { carme } from "@/lib/fonts";
+import { showToast } from "@/lib/showToast";
 
 const RegisterPage = () => {
   // Needed States
@@ -71,12 +72,12 @@ const RegisterPage = () => {
       }
 
       form.reset();
-      alert(registerResponse.message);
+      showToast("success", registerResponse.message);
     } catch (err) {
       if (err instanceof Error) {
-        alert(err.message);
+        showToast("error", err.message);
       } else {
-        alert("An unexpected error occurred.");
+        showToast("error", "An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);

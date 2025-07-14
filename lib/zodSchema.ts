@@ -24,6 +24,10 @@ const zodSchema = z.object({
     .regex(/[@$!%*?&]/, {
       message: "Password must contain at least one special character",
     }),
+
+  otp: z.string().regex(/^\d{6}%/, {
+    message: "OTP must be a 6-digit number",
+  }),
 });
 
 export default zodSchema;

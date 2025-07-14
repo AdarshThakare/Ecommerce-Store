@@ -23,11 +23,12 @@ import Link from "next/link";
 import { USER_REGISTER } from "@/routes/UserRoute";
 import { carme } from "@/lib/fonts";
 import axios from "axios";
+import { showToast } from "@/lib/showToast";
 
 const LoginPage = () => {
   // Needed States
   const [isLoading, setIsLoading] = useState(false);
-  console.log(setIsLoading);
+  const [otpEmail, setOtpEmail] = useState<String>();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // select only the required fields for the login form
   const formSchema = zodSchema
@@ -62,13 +63,14 @@ const LoginPage = () => {
         throw new Error(loginResponse.message);
       }
 
+      setOtpEmail(value.email);
       form.reset();
-      alert(loginResponse.message);
+      showToast("success", loginResponse.message);
     } catch (err) {
       if (err instanceof Error) {
-        alert(err.message);
+        showToast("error", err.message);
       } else {
-        alert("An unexpected error occurred.");
+        showToast("error", "An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);
@@ -92,111 +94,122 @@ const LoginPage = () => {
               className="w-[150px]"
             />
           </div>
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mt-3">Login Into Account</h1>
-            <p className={`${carme.className} mt-1`}>
-              Log into your account by filling the form below.
-            </p>
-          </div>
 
-          {/* Login Form section  */}
-          <div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onHandleLoginSubmit)}
-                className="mt-6"
-              >
-                <div className="mb-3">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel
-                          className={`${carme.className} text-md tracking-wider`}
-                        >
-                          Email -
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="Enter your email"
-                            className={`${carme.className} text-md tracking-wide `}
-                            {...field}
-                          />
-                        </FormControl>
-                        {/* To display validation messages */}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="mb-5 relative">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className={`${carme.className} text-md `}>
-                          Password -
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type={isPasswordVisible ? "text" : "password"}
-                            placeholder="Enter your password"
-                            className={`${carme.className} text-md `}
-                            {...field}
-                          />
-                        </FormControl>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setIsPasswordVisible(!isPasswordVisible)
-                          }
-                          className="absolute right-5 top-[43px] text-gray-500 hover:text-gray-700 cursor-pointer"
-                        >
-                          {!isPasswordVisible ? (
-                            <FaRegEyeSlash />
-                          ) : (
-                            <FaRegEye />
-                          )}
-                        </button>
-                        {/* To display validation messages */}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className={`ms-1 text-sm -mt-3 mb-4 ${carme.className}`}>
-                  <span>Forgot your Password ?</span>
-                  <Link
-                    href="/auth/register"
-                    className="text-primary ml-3 hover:font-semibold hover:underline"
+          {!otpEmail ? (
+            <>
+              <div className="text-center">
+                <h1 className="text-3xl font-bold mt-3">Login Into Account</h1>
+                <p className={`${carme.className} mt-1`}>
+                  Log into your account by filling the form below.
+                </p>
+              </div>
+
+              {/* Login Form section  */}
+              <div>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onHandleLoginSubmit)}
+                    className="mt-6"
                   >
-                    Reset Password
-                  </Link>
-                </div>
-                <div>
-                  <LoadingButton
-                    isLoading={isLoading}
-                    type="submit"
-                    text="Login"
-                    onClick={() => {}}
-                    className="w-full text-lg py-5 cursor-pointer"
-                  />
-                </div>
-                <div className={`mt-4 text-center ${carme.className}`}>
-                  <p>Don&apos;t have an Account yet ?</p>
-                  <Link
-                    href={USER_REGISTER}
-                    className="text-primary ml-3 hover:font-semibold hover:underline"
-                  >
-                    Create your Account
-                  </Link>
-                </div>
-              </form>
-            </Form>
-          </div>
+                    <div className="mb-3">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel
+                              className={`${carme.className} text-md tracking-wider`}
+                            >
+                              Email -
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="Enter your email"
+                                className={`${carme.className} text-md tracking-wide `}
+                                {...field}
+                              />
+                            </FormControl>
+                            {/* To display validation messages */}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="mb-5 relative">
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel
+                              className={`${carme.className} text-md `}
+                            >
+                              Password -
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type={isPasswordVisible ? "text" : "password"}
+                                placeholder="Enter your password"
+                                className={`${carme.className} text-md `}
+                                {...field}
+                              />
+                            </FormControl>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setIsPasswordVisible(!isPasswordVisible)
+                              }
+                              className="absolute right-5 top-[43px] text-gray-500 hover:text-gray-700 cursor-pointer"
+                            >
+                              {!isPasswordVisible ? (
+                                <FaRegEyeSlash />
+                              ) : (
+                                <FaRegEye />
+                              )}
+                            </button>
+                            {/* To display validation messages */}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div
+                      className={`ms-1 text-sm -mt-3 mb-4 ${carme.className}`}
+                    >
+                      <span>Forgot your Password ?</span>
+                      <Link
+                        href="/auth/register"
+                        className="text-primary ml-3 hover:font-semibold hover:underline"
+                      >
+                        Reset Password
+                      </Link>
+                    </div>
+                    <div>
+                      <LoadingButton
+                        isLoading={isLoading}
+                        type="submit"
+                        text="Login"
+                        onClick={() => {}}
+                        className="w-full text-lg py-5 cursor-pointer"
+                      />
+                    </div>
+                    <div className={`mt-4 text-center ${carme.className}`}>
+                      <p>Don&apos;t have an Account yet ?</p>
+                      <Link
+                        href={USER_REGISTER}
+                        className="text-primary ml-3 hover:font-semibold hover:underline"
+                      >
+                        Create your Account
+                      </Link>
+                    </div>
+                  </form>
+                </Form>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </CardContent>
       </Card>
     </>

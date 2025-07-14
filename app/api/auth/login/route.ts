@@ -39,7 +39,9 @@ export async function POST(request: Request) {
     const { email, password } = validatedData.data;
 
     //get user data
-    const getUser = await User.findOne({ email });
+    const getUser = await User.findOne({ deletedAt: null, email }).select(
+      "+password"
+    );
 
     if (!getUser) {
       return NextResponse.json({
@@ -127,7 +129,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       statusCode: 201,
-      message: "User Logged In Successfully! :)",
+      message:
+        "User Logged In Successfully! Please enter the OTP sent to you on mail ",
       data: getUser,
     });
   } catch (err) {

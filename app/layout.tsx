@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { zilla } from "@/lib/fonts";
+import { Slide, ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +15,9 @@ export type ChildrenProps = {
 export default function RootLayout({ children }: Readonly<ChildrenProps>) {
   return (
     <html lang="en">
-      <body className={`${zilla.className} antialiased`}>{children}</body>
+      <body className={`${zilla.className} antialiased`}>
+        <ToastContainer />;{children}
+      </body>
     </html>
   );
 }
