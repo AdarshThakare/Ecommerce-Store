@@ -1,7 +1,9 @@
 import emailVerificationLink from "@/emailTemplates/emailVerificationLink";
 import connectDB from "@/lib/db";
+import { generateOTP } from "@/lib/requestHelper";
 import sendMail from "@/lib/sendMail";
 import zodSchema from "@/lib/zodSchema";
+import OTP from "@/models/otp.model";
 import User from "@/models/user.model";
 import { SignJWT } from "jose";
 import { NextResponse } from "next/server";
@@ -93,7 +95,20 @@ export async function POST(request: Request) {
     }
 
     //otp generation
+    await OTP.deleteMany({ email }); //to delete all the prior OTPs if tried creating multiple OTPs
 
+    const otp = generateOTP();
+
+    const newOtpData = await new OTP({
+      email,
+      otp,
+    });
+
+    console.log("\nThe OTP is : ", newOtpData);
+
+    // TODO Send Email to send the OTP to the user
+
+    await newOtpData.save();
     return NextResponse.json({
       success: true,
       statusCode: 201,
