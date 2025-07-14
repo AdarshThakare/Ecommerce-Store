@@ -1,3 +1,4 @@
+import { otpEmail } from "@/emailTemplates/emailOtpVerification";
 import emailVerificationLink from "@/emailTemplates/emailVerificationLink";
 import connectDB from "@/lib/db";
 import { generateOTP } from "@/lib/requestHelper";
@@ -106,7 +107,21 @@ export async function POST(request: Request) {
 
     console.log("\nThe OTP is : ", newOtpData);
 
-    // TODO Send Email to send the OTP to the user
+    // Send Email to send the OTP to the user
+    const otpEmailStatus = await sendMail(
+      "Your login verification code is",
+      email,
+      otpEmail(otp)
+    );
+
+    if (!otpEmailStatus.success) {
+      return NextResponse.json({
+        success: false,
+        statusCode: 400,
+        message: "Failed to send OTP via email",
+        data: otp,
+      });
+    }
 
     await newOtpData.save();
     return NextResponse.json({
