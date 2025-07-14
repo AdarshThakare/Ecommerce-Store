@@ -24,11 +24,14 @@ import { USER_REGISTER } from "@/routes/UserRoute";
 import { carme } from "@/lib/fonts";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
+import OTPVerification from "@/components/application/OTPVerification";
 
 const LoginPage = () => {
   // Needed States
   const [isLoading, setIsLoading] = useState(false);
-  const [otpEmail, setOtpEmail] = useState<String>();
+  const [otpEmail, setOtpEmail] = useState<string>("");
+  const [otpVerificationLoading, setOTPVerificationLoading] = useState(false);
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // select only the required fields for the login form
   const formSchema = zodSchema
@@ -74,6 +77,38 @@ const LoginPage = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  //Handling OTP Verification
+  const handleOTPVerification = async (value: {
+    otp: string;
+    email: string;
+  }) => {
+    console.log("The entered OTP Values are - ", value);
+
+    try {
+      setOTPVerificationLoading(true);
+      const { data: OTPResponse } = await axios.post(
+        "/api/auth/verify-otp",
+        value
+      );
+
+      if (!OTPResponse.success) {
+        throw new Error(OTPResponse.message);
+      }
+
+      setOtpEmail("");
+      form.reset();
+      showToast("success", OTPResponse.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        showToast("error", err.message);
+      } else {
+        showToast("error", "An unexpected error occurred.");
+      }
+    } finally {
+      setOTPVerificationLoading(false);
     }
   };
 
@@ -208,7 +243,13 @@ const LoginPage = () => {
               </div>
             </>
           ) : (
-            <></>
+            <>
+              <OTPVerification
+                email={otpEmail}
+                isLoading={otpVerificationLoading}
+                onSubmit={handleOTPVerification}
+              />
+            </>
           )}
         </CardContent>
       </Card>

@@ -129,8 +129,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       statusCode: 201,
-      message:
-        "User Logged In Successfully! Please enter the OTP sent to you on mail ",
+      message: "Please proceed by entering the OTP sent to your mail",
       data: getUser,
     });
   } catch (err) {
