@@ -19,6 +19,7 @@ export async function POST(request: Request) {
     });
 
     const validatedData = validationSchema.safeParse(payload);
+    console.log("Payload : ", payload);
     if (!validatedData.success) {
       return NextResponse.json({
         success: false,

@@ -2,7 +2,7 @@ import { carme } from "@/lib/fonts";
 import zodSchema from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -15,6 +15,8 @@ import {
 import { LoadingButton } from "./LoadingButton";
 import z from "zod";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
+import axios from "axios";
+import { showToast } from "@/lib/showToast";
 
 type OTPprops = {
   email: string;
@@ -22,6 +24,7 @@ type OTPprops = {
   isLoading: boolean;
 };
 const OTPVerification = ({ email, onSubmit, isLoading }: OTPprops) => {
+  const [isResendOtpLoading, setIsResendOtpLoading] = useState(false);
   const formSchema = zodSchema.pick({
     otp: true,
     email: true,
@@ -37,6 +40,32 @@ const OTPVerification = ({ email, onSubmit, isLoading }: OTPprops) => {
 
   const handleOtpVerification = async (value: z.infer<typeof formSchema>) => {
     onSubmit(value);
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      setIsResendOtpLoading(true);
+      const { data: ResemdOTPResponse } = await axios.post(
+        "/api/auth/resend-otp",
+        {
+          email,
+        }
+      );
+
+      if (!ResemdOTPResponse.success) {
+        throw new Error(ResemdOTPResponse.message);
+      }
+
+      showToast("success", ResemdOTPResponse.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        showToast("error", err.message);
+      } else {
+        showToast("error", "An unexpected error occurred.");
+      }
+    } finally {
+      setIsResendOtpLoading(false);
+    }
   };
   return (
     <div className="w-100">
@@ -92,12 +121,16 @@ const OTPVerification = ({ email, onSubmit, isLoading }: OTPprops) => {
             />
             <div className={`text-center text-lg mt-3 mb-4 ${carme.className}`}>
               <span>Didn't Receive anything ?</span>
-              <Link
-                href="/auth/register"
-                className="text-primary ml-3 hover:font-semibold hover:underline"
-              >
-                Resend OTP
-              </Link>
+              {isResendOtpLoading ? (
+                <span className="text-primary ml-3 ">Resending...</span>
+              ) : (
+                <button
+                  onClick={handleResendOTP}
+                  className="text-primary ml-3 hover:font-semibold hover:underline"
+                >
+                  Resend OTP
+                </button>
+              )}
             </div>
           </div>
         </form>
