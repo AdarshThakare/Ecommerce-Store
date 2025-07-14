@@ -22,6 +22,7 @@ import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import { USER_REGISTER } from "@/routes/UserRoute";
 import { carme } from "@/lib/fonts";
+import axios from "axios";
 
 const LoginPage = () => {
   // Needed States
@@ -49,6 +50,29 @@ const LoginPage = () => {
   //to handle form submission for login
   const onHandleLoginSubmit = async (value: z.infer<typeof formSchema>) => {
     console.log("Login Form Submitted", value);
+
+    try {
+      setIsLoading(true);
+      const { data: loginResponse } = await axios.post(
+        "/api/auth/login",
+        value
+      );
+
+      if (!loginResponse.success) {
+        throw new Error(loginResponse.message);
+      }
+
+      form.reset();
+      alert(loginResponse.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert("An unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
