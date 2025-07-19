@@ -51,6 +51,19 @@ const LoginPage = () => {
     },
   });
 
+  const zodFormSchema = zodSchema.pick({
+    otp: true,
+    email: true,
+  });
+
+  const zodForm = useForm({
+    resolver: zodResolver(zodFormSchema),
+    defaultValues: {
+      otp: "",
+      email: otpEmail,
+    },
+  });
+
   //to handle form submission for login
   const onHandleLoginSubmit = async (value: z.infer<typeof formSchema>) => {
     console.log("Login Form Submitted", value);
@@ -81,10 +94,7 @@ const LoginPage = () => {
   };
 
   //Handling OTP Verification
-  const handleOTPVerification = async (value: {
-    otp: string;
-    email: string;
-  }) => {
+  const handleOTPVerification = async (value: z.infer<typeof zodForm>) => {
     console.log("The entered OTP Values are - ", value);
 
     try {

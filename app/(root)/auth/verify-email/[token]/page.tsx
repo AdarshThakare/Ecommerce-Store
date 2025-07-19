@@ -9,6 +9,7 @@ import Link from "next/link";
 import { USER_HOME } from "@/routes/UserRoute";
 import { use, useEffect, useState } from "react";
 import { carme } from "@/lib/fonts";
+import { Loader2 } from "lucide-react";
 
 interface EmailVerificationProps {
   params: { token: string };
@@ -23,9 +24,11 @@ const EmailVerification = ({ params }: EmailVerificationProps) => {
   console.log(token);
 
   const [isVerified, setIsVerified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //getting the user credentials from the token
   useEffect(() => {
+    setIsLoading(true);
     const verify = async () => {
       const { data: verificationResponse } = await axios.post(
         "/api/auth/verify-email",
@@ -39,6 +42,7 @@ const EmailVerification = ({ params }: EmailVerificationProps) => {
     };
 
     verify();
+    setIsLoading(false);
   }, [token]);
   return (
     <>
@@ -47,49 +51,55 @@ const EmailVerification = ({ params }: EmailVerificationProps) => {
       <div className="bg-slide-login bg2"></div>
       <div className="bg-slide-login bg3"></div>
       <Card className="w-[400px]">
-        <CardContent>
-          {isVerified ? (
-            <div>
-              <div className="flex justify-center items-center">
-                <Image
-                  src={verifiedImg}
-                  alt={""}
-                  height={100}
-                  width={100}
-                  className="h-[100px]"
-                />
+        {isLoading ? (
+          <>
+            <Loader2 className="animate-spin mr-2" />
+          </>
+        ) : (
+          <CardContent>
+            {isVerified ? (
+              <div>
+                <div className="flex justify-center items-center">
+                  <Image
+                    src={verifiedImg}
+                    alt={""}
+                    height={100}
+                    width={100}
+                    className="h-[100px]"
+                  />
+                </div>
+                <div className="text-center">
+                  <h1 className="text-2xl font-bold text-green-500 my-5">
+                    Email Verification Successful!
+                  </h1>
+                  <Button asChild className={`text-lg p-5 ${carme.className}`}>
+                    <Link href={`${USER_HOME}`}>Continue Shopping </Link>
+                  </Button>
+                </div>
               </div>
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-green-500 my-5">
-                  Email Verification Successful!
-                </h1>
-                <Button asChild className={`text-lg p-5 ${carme.className}`}>
-                  <Link href={`${USER_HOME}`}>Continue Shopping </Link>
-                </Button>
+            ) : (
+              <div>
+                <div className="flex justify-center items-center">
+                  <Image
+                    src={verificationFailed}
+                    alt={""}
+                    height={100}
+                    width={100}
+                    className="h-[100px]"
+                  />
+                </div>
+                <div className="text-center">
+                  <h1 className="text-2xl font-bold text-red-500 my-5">
+                    Email Verification Failed!
+                  </h1>
+                  <Button asChild className={`text-lg p-5 ${carme.className}`}>
+                    <Link href={`${USER_HOME}`}>Continue Shopping </Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex justify-center items-center">
-                <Image
-                  src={verificationFailed}
-                  alt={""}
-                  height={100}
-                  width={100}
-                  className="h-[100px]"
-                />
-              </div>
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-red-500 my-5">
-                  Email Verification Failed!
-                </h1>
-                <Button asChild className={`text-lg p-5 ${carme.className}`}>
-                  <Link href={`${USER_HOME}`}>Continue Shopping </Link>
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
+            )}
+          </CardContent>
+        )}
       </Card>
     </>
   );

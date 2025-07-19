@@ -25,6 +25,7 @@ type OTPprops = {
 };
 const OTPVerification = ({ email, onSubmit, isLoading }: OTPprops) => {
   const [isResendOtpLoading, setIsResendOtpLoading] = useState(false);
+
   const formSchema = zodSchema.pick({
     otp: true,
     email: true,

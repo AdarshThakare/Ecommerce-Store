@@ -12,7 +12,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     await connectDB();
-    const { payload } = await request.json();
+    const payload = await request.json();
 
     const validationSchema = zodSchema.pick({
       email: true,

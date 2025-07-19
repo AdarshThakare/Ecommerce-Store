@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     await connectDB();
-    const { payload } = await request.json();
+    const payload = await request.json();
 
     const validationSchema = zodSchema.pick({
       otp: true,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       avatar: getUser.avatar,
     };
 
-    const SECRET = new TextEncoder().encode(process.env.SECRET_KEY);
+    const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
     const token = await new SignJWT(loggedInUserData)
       .setIssuedAt()
       .setExpirationTime("24hr")
