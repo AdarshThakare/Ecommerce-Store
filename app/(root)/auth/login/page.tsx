@@ -25,6 +25,8 @@ import { carme } from "@/lib/fonts";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
 import OTPVerification from "@/components/application/OTPVerification";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/reducer/authReducer";
 
 const LoginPage = () => {
   // Needed States
@@ -33,6 +35,10 @@ const LoginPage = () => {
   const [otpVerificationLoading, setOTPVerificationLoading] = useState(false);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  //react redux reducer dispatcher
+  const dispatch = useDispatch();
+
   // select only the required fields for the login form
   const formSchema = zodSchema
     .pick({
@@ -111,6 +117,7 @@ const LoginPage = () => {
       setOtpEmail("");
       form.reset();
       showToast("success", OTPResponse.message);
+      dispatch(login(OTPResponse.data));
     } catch (err) {
       if (err instanceof Error) {
         showToast("error", err.message);
