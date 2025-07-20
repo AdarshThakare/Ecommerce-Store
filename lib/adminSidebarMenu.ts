@@ -38,7 +38,7 @@ export const AdminAppSidebarMenu = [
         url: "#",
       },
       {
-        title: "Add Product Variant",
+        title: "Add Variant",
         url: "#",
       },
       {
@@ -46,7 +46,7 @@ export const AdminAppSidebarMenu = [
         url: "#",
       },
       {
-        title: "All Product Variants",
+        title: "All Variants",
         url: "#",
       },
     ],

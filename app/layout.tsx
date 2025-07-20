@@ -18,7 +18,8 @@ export default function RootLayout({ children }: Readonly<ChildrenProps>) {
     <html lang="en">
       <body className={`${zilla.className} antialiased`}>
         <GlobalProvider>
-          <ToastContainer />;{children}
+          <ToastContainer />
+          {children}
         </GlobalProvider>
       </body>
     </html>

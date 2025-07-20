@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Sidebar,
@@ -10,6 +11,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "../ui/sidebar";
 import Image from "next/image";
 import logoBlack from "@/public/assets/images/logo-black.png";
@@ -28,9 +30,10 @@ import Link from "next/link";
 import { carme } from "@/lib/fonts";
 
 const AppSidebar = () => {
+  const { toggleSidebar } = useSidebar();
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b h-20 p-2">
+    <Sidebar className="z-50">
+      <SidebarHeader className="border-b h-18 p-2">
         <div className="flex justify-between item-center px-4">
           <Image
             src={logoBlack}
@@ -46,7 +49,12 @@ const AppSidebar = () => {
             className="hidden dark:block h-[50px] w-auto"
             alt="Logo Dark"
           />
-          <Button type="button" size="icon" className="md:hidden">
+          <Button
+            type="button"
+            size="icon"
+            className="md:hidden mt-2"
+            onClick={toggleSidebar}
+          >
             <IoMdClose />
           </Button>
         </div>
