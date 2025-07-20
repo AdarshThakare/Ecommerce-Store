@@ -20,89 +20,40 @@ import { LoadingButton } from "@/components/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { USER_REGISTER, USER_RESETPASSWORD } from "@/routes/UserRoute";
+import {
+  USER_LOGIN,
+  USER_REGISTER,
+  USER_RESETPASSWORD,
+} from "@/routes/UserRoute";
 import { carme } from "@/lib/fonts";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
 import OTPVerification from "@/components/application/OTPVerification";
-import { useDispatch } from "react-redux";
-import { login } from "@/store/reducer/authReducer";
 
-const LoginPage = () => {
-  // Needed States
+const ResetPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [otpEmail, setOtpEmail] = useState<string>("");
-  const [otpVerificationLoading, setOTPVerificationLoading] = useState(false);
-
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  //react redux reducer dispatcher
-  const dispatch = useDispatch();
+  const [otpVerificationLoading, setOTPVerificationLoading] = useState(false);
 
-  // select only the required fields for the login form
-  const formSchema = zodSchema
-    .pick({
-      email: true,
-    })
-    .extend({
-      password: z.string().min(3, { message: "Password is required" }),
-    });
-
-  // use the form schema with react-hook-form
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const zodFormSchema = zodSchema.pick({
-    otp: true,
+  const formSchema = zodSchema.pick({
     email: true,
   });
 
-  const zodForm = useForm({
-    resolver: zodResolver(zodFormSchema),
+  const form = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      otp: "",
-      email: otpEmail,
+      email: "",
     },
   });
 
-  //to handle form submission for login
-  const onHandleLoginSubmit = async (value: z.infer<typeof formSchema>) => {
-    console.log("Login Form Submitted", value);
-
-    try {
-      setIsLoading(true);
-      const { data: loginResponse } = await axios.post(
-        "/api/auth/login",
-        value
-      );
-
-      if (!loginResponse.success) {
-        throw new Error(loginResponse.message);
-      }
-
-      setOtpEmail(value.email);
-      form.reset();
-      showToast("success", loginResponse.message);
-    } catch (err) {
-      if (err instanceof Error) {
-        showToast("error", err.message);
-      } else {
-        showToast("error", "An unexpected error occurred.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleEmailVerification = async (
+    values: z.infer<typeof formSchema>
+  ) => {};
 
   //Handling OTP Verification
-  const handleOTPVerification = async (
-    value: z.infer<typeof zodFormSchema>
-  ) => {
+  const handleOTPVerification = async (value: z.infer<typeof formSchema>) => {
     console.log("The entered OTP Values are - ", value);
 
     try {
@@ -119,7 +70,6 @@ const LoginPage = () => {
       setOtpEmail("");
       form.reset();
       showToast("success", OTPResponse.message);
-      dispatch(login(OTPResponse.data));
     } catch (err) {
       if (err instanceof Error) {
         showToast("error", err.message);
@@ -152,9 +102,9 @@ const LoginPage = () => {
           {!otpEmail ? (
             <>
               <div className="text-center">
-                <h1 className="text-3xl font-bold mt-3">Login Into Account</h1>
+                <h1 className="text-3xl font-bold mt-3">Reset your password</h1>
                 <p className={`${carme.className} mt-1`}>
-                  Log into your account by filling the form below.
+                  Enter your details for password reset
                 </p>
               </div>
 
@@ -162,7 +112,7 @@ const LoginPage = () => {
               <div>
                 <Form {...form}>
                   <form
-                    onSubmit={form.handleSubmit(onHandleLoginSubmit)}
+                    onSubmit={form.handleSubmit(handleEmailVerification)}
                     className="mt-6"
                   >
                     <div className="mb-3">
@@ -190,71 +140,23 @@ const LoginPage = () => {
                         )}
                       />
                     </div>
-                    <div className="mb-5 relative">
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel
-                              className={`${carme.className} text-md `}
-                            >
-                              Password -
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                type={isPasswordVisible ? "text" : "password"}
-                                placeholder="Enter your password"
-                                className={`${carme.className} text-md `}
-                                {...field}
-                              />
-                            </FormControl>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setIsPasswordVisible(!isPasswordVisible)
-                              }
-                              className="absolute right-5 top-[43px] text-gray-500 hover:text-gray-700 cursor-pointer"
-                            >
-                              {!isPasswordVisible ? (
-                                <FaRegEyeSlash />
-                              ) : (
-                                <FaRegEye />
-                              )}
-                            </button>
-                            {/* To display validation messages */}
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div
-                      className={`ms-1 text-sm -mt-3 mb-4 ${carme.className}`}
-                    >
-                      <span>Forgot your Password ?</span>
-                      <Link
-                        href={USER_RESETPASSWORD}
-                        className="text-primary ml-3 hover:font-semibold hover:underline"
-                      >
-                        Reset Password
-                      </Link>
-                    </div>
+
                     <div>
                       <LoadingButton
                         isLoading={isLoading}
                         type="submit"
-                        text="Login"
+                        text="Send OTP"
                         onClick={() => {}}
                         className="w-full text-lg py-5 cursor-pointer"
                       />
                     </div>
                     <div className={`mt-4 text-center ${carme.className}`}>
-                      <p>Don&apos;t have an Account yet ?</p>
+                      <p>Remembered your Password?</p>
                       <Link
-                        href={USER_REGISTER}
+                        href={USER_LOGIN}
                         className="text-primary ml-3 hover:font-semibold hover:underline"
                       >
-                        Create your Account
+                        Back to login
                       </Link>
                     </div>
                   </form>
@@ -276,4 +178,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;
