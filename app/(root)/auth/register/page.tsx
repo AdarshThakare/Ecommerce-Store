@@ -20,7 +20,7 @@ import { LoadingButton } from "@/components/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { USER_LOGIN } from "@/routes/UserRoute";
+import { WEBSITE_LOGIN } from "@/routes/UserRoute";
 import axios from "axios";
 import { carme } from "@/lib/fonts";
 import { showToast } from "@/lib/showToast";
@@ -238,7 +238,7 @@ const RegisterPage = () => {
                 <div className={`mt-4 text-center ${carme.className}`}>
                   <p>Already have an Account ?</p>
                   <Link
-                    href={USER_LOGIN}
+                    href={WEBSITE_LOGIN}
                     className="text-primary ml-3 hover:font-semibold hover:underline"
                   >
                     Login to Account

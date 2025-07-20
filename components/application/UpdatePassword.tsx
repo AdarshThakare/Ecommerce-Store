@@ -18,7 +18,7 @@ import { LoadingButton } from "@/components/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { USER_LOGIN } from "@/routes/UserRoute";
+import { WEBSITE_LOGIN } from "@/routes/UserRoute";
 import axios from "axios";
 import { carme } from "@/lib/fonts";
 import { showToast } from "@/lib/showToast";
@@ -73,7 +73,7 @@ const UpdatePage = ({ email }: { email: string }) => {
 
       form.reset();
       showToast("success", passwordUpdate.message);
-      router.push(USER_LOGIN);
+      router.push(WEBSITE_LOGIN);
     } catch (err) {
       if (err instanceof Error) {
         showToast("error", err.message);

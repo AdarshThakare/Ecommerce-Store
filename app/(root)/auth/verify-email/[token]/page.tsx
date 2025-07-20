@@ -6,7 +6,7 @@ import verificationFailed from "@/public/assets/images/verification-failed.gif";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { USER_HOME } from "@/routes/UserRoute";
+import { WEBSITE_HOME } from "@/routes/UserRoute";
 import { use, useEffect, useState } from "react";
 import { carme } from "@/lib/fonts";
 import { Loader2 } from "lucide-react";
@@ -73,7 +73,7 @@ const EmailVerification = ({ params }: EmailVerificationProps) => {
                     Email Verification Successful!
                   </h1>
                   <Button asChild className={`text-lg p-5 ${carme.className}`}>
-                    <Link href={`${USER_HOME}`}>Continue Shopping </Link>
+                    <Link href={`${WEBSITE_HOME}`}>Continue Shopping </Link>
                   </Button>
                 </div>
               </div>
@@ -93,7 +93,7 @@ const EmailVerification = ({ params }: EmailVerificationProps) => {
                     Email Verification Failed!
                   </h1>
                   <Button asChild className={`text-lg p-5 ${carme.className}`}>
-                    <Link href={`${USER_HOME}`}>Continue Shopping </Link>
+                    <Link href={`${WEBSITE_HOME}`}>Continue Shopping </Link>
                   </Button>
                 </div>
               </div>

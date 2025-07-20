@@ -20,13 +20,19 @@ import { LoadingButton } from "@/components/application/LoadingButton";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { USER_REGISTER, USER_RESETPASSWORD } from "@/routes/UserRoute";
+import {
+  USER_DASHBOARD,
+  WEBSITE_REGISTER,
+  WEBSITE_RESETPASSWORD,
+} from "@/routes/UserRoute";
 import { carme } from "@/lib/fonts";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
 import OTPVerification from "@/components/application/OTPVerification";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/reducer/authReducer";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ADMIN_DASHBOARD } from "@/routes/AdminRoute";
 
 const LoginPage = () => {
   // Needed States
@@ -38,6 +44,8 @@ const LoginPage = () => {
 
   //react redux reducer dispatcher
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   // select only the required fields for the login form
   const formSchema = zodSchema
@@ -117,9 +125,22 @@ const LoginPage = () => {
       }
 
       setOtpEmail("");
-      form.reset();
+      zodForm.reset();
       showToast("success", OTPResponse.message);
+
+      //store user data into redux-storage
       dispatch(login(OTPResponse.data));
+
+      if (searchParams.has("callback")) {
+        const callbackUrl = searchParams.get("callback");
+        if (callbackUrl) {
+          router.push(callbackUrl);
+        } else {
+          OTPResponse.data.role === "admin"
+            ? router.push(ADMIN_DASHBOARD)
+            : router.push(USER_DASHBOARD);
+        }
+      }
     } catch (err) {
       if (err instanceof Error) {
         showToast("error", err.message);
@@ -233,7 +254,7 @@ const LoginPage = () => {
                     >
                       <span>Forgot your Password ?</span>
                       <Link
-                        href={USER_RESETPASSWORD}
+                        href={WEBSITE_RESETPASSWORD}
                         className="text-primary ml-3 hover:font-semibold hover:underline"
                       >
                         Reset Password
@@ -251,7 +272,7 @@ const LoginPage = () => {
                     <div className={`mt-4 text-center ${carme.className}`}>
                       <p>Don&apos;t have an Account yet ?</p>
                       <Link
-                        href={USER_REGISTER}
+                        href={WEBSITE_REGISTER}
                         className="text-primary ml-3 hover:font-semibold hover:underline"
                       >
                         Create your Account
@@ -262,8 +283,7 @@ const LoginPage = () => {
               </div>
             </>
           ) : (
-              <>
-         
+            <>
               <OTPVerification
                 email={otpEmail}
                 isLoading={otpVerificationLoading}

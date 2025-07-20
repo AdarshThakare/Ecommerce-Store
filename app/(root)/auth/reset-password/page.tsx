@@ -21,9 +21,9 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import {
-  USER_LOGIN,
-  USER_REGISTER,
-  USER_RESETPASSWORD,
+  WEBSITE_LOGIN,
+  WEBSITE_REGISTER,
+  WEBSITE_RESETPASSWORD,
 } from "@/routes/UserRoute";
 import { carme } from "@/lib/fonts";
 import axios from "axios";
@@ -175,7 +175,7 @@ const ResetPasswordPage = () => {
                     <div className={`mt-4 text-center ${carme.className}`}>
                       <p>Remembered your Password?</p>
                       <Link
-                        href={USER_LOGIN}
+                        href={WEBSITE_LOGIN}
                         className="text-primary ml-3 hover:font-semibold hover:underline"
                       >
                         Back to login

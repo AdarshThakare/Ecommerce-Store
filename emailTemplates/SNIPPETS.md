@@ -210,7 +210,7 @@ export const emailVerificationLink = (link) => {
                                                                 style="padding-bottom:5px;padding-left:10px;padding-right:10px;padding-top:10px;">
                                                                 <div
                                                                     style="color:#393d47;font-family:Tahoma,Verdana,Segoe,sans-serif;font-size:13px;line-height:150%;text-align:center;mso-line-height-alt:19.5px;">
-                                                                    <p style="margin: 10px;"><strong>Note:</strong> This link will expire in 1 hours. If you did not create an account, you can safely ignore this email.</p>
+                                                                    <p style="margin: 10px;"><strong>Note:</strong> This link will expire in 1 hour. If you did not create an account, you can safely ignore this email.</p>
                                                                          
                                                                     <p style="margin: 0;">Thank you,<br />
                                                                         <a href="https://www.youtube.com/@developergoswami"
@@ -1609,29 +1609,27 @@ export const darkTheme = createTheme({
 });
 ```
 
-
-
-# Components 
+# Components
 
 <details>
  <summary><code>Select.jsx</code></summary>
 
- ```js 
-'use client'
+```js
+"use client";
 import * as React from "react";
 import { useState } from "react";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, ChevronDown, XIcon } from "lucide-react";
@@ -1639,515 +1637,544 @@ import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 
 function Select({
-    options,
-    selected,
-    setSelected,
-    placeholder = "Select options",
-    isMulti = false, // Added prop to determine if multi-select is enabled
+  options,
+  selected,
+  setSelected,
+  placeholder = "Select options",
+  isMulti = false, // Added prop to determine if multi-select is enabled
 }) {
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const handleSelect = (option) => {
-        if (isMulti) {
-            // If multi-select, toggle the option
-            if (selected.includes(option.value)) {
-                setSelected(selected.filter((s) => s !== option.value));
-            } else {
-                setSelected([...selected, option.value]);
-            }
-        } else {
-            // If single-select, set the selected option directly (non-array value)
-            setSelected(option.value);
-            setOpen(false); // Close the dropdown after selection in single-select
-        }
-    };
+  const handleSelect = (option) => {
+    if (isMulti) {
+      // If multi-select, toggle the option
+      if (selected.includes(option.value)) {
+        setSelected(selected.filter((s) => s !== option.value));
+      } else {
+        setSelected([...selected, option.value]);
+      }
+    } else {
+      // If single-select, set the selected option directly (non-array value)
+      setSelected(option.value);
+      setOpen(false); // Close the dropdown after selection in single-select
+    }
+  };
 
+  const handleRemove = (value) => {
+    setSelected(selected.filter((s) => s !== value));
+  };
 
-    const handleRemove = (value) => {
-        setSelected(selected.filter((s) => s !== value));
-    };
+  const handleClearAll = () => {
+    setSelected(isMulti ? [] : null);
+  };
 
-    const handleClearAll = () => {
-        setSelected(isMulti ? [] : null);
-    };
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger className="w-full" asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="justify-between dark:bg-card"
+        >
+          <div>
+            {Array.isArray(selected) && selected.length > 0
+              ? selected.map((value) => {
+                  const option = options.find((o) => o.value === value);
+                  return (
+                    <Badge key={value} className="me-2">
+                      {option.label}
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation(e);
+                          handleRemove(value);
+                        }}
+                      >
+                        <XIcon className="ml-2 h-4 w-4 cursor-pointer" />
+                      </span>
+                    </Badge>
+                  );
+                })
+              : (selected &&
+                  options.find((o) => o.value === selected)?.label) ||
+                placeholder}
+          </div>
 
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger className="w-full" asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="justify-between dark:bg-card"
+          <div className="flex items-center gap-2">
+            {selected && selected.length > 0 && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClearAll();
+                }}
+              >
+                <XIcon className="h-4 w-4 shrink-0 opacity-50" />
+              </span>
+            )}
+            <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+          </div>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="p-0">
+        <Command>
+          <CommandList>
+            <CommandInput placeholder="Search options..." />
+            <CommandEmpty>No options found.</CommandEmpty>
+            <CommandGroup>
+              {options.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  value={option.label}
+                  onSelect={() => handleSelect(option)}
                 >
-                    <div>
- 
-                        {Array.isArray(selected) && selected.length > 0
-                            ?
-                            selected.map((value) => {
-                                const option = options.find((o) => o.value === value);
-                                return (
-                                    <Badge key={value} className="me-2">
-                                        {option.label}
-                                        <span onClick={(e) => { e.stopPropagation(e); handleRemove(value) }} >
-                                            <XIcon className="ml-2 h-4 w-4 cursor-pointer" />
-                                        </span>
-                                    </Badge>
-                                )
-                            })
-                            :
-                            selected && options.find((o) => o.value === selected)?.label || placeholder
-                        }
-
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        {selected && selected.length > 0 &&
-                            <span onClick={(e) => { e.stopPropagation(); handleClearAll() }}>
-                                <XIcon className="h-4 w-4 shrink-0 opacity-50" />
-                            </span>
-                        }
-                        <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
-                    </div>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="p-0">
-                <Command>
-                    <CommandList>
-                        <CommandInput placeholder="Search options..." />
-                        <CommandEmpty>No options found.</CommandEmpty>
-                        <CommandGroup>
-                            {options.map((option) => (
-                                <CommandItem
-                                    key={option.value}
-                                    value={option.label}
-                                    onSelect={() => handleSelect(option)}
-                                >
-                                    {option.label}
-                                    <CheckIcon
-                                        className={cn(
-                                            "ml-auto h-4 w-4",
-                                            (isMulti
-                                                ? selected.includes(option.value)
-                                                : selected === option.value)
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                        )}
-                                    />
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    );
+                  {option.label}
+                  <CheckIcon
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      (
+                        isMulti
+                          ? selected.includes(option.value)
+                          : selected === option.value
+                      )
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 export default Select;
+```
 
- ```
  </details>
-
 
  <details>
   <summary><code>Editor.jsx</code></summary>
 
-```js 
-'use client'
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+```js
+"use client";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 
 import {
-    ClassicEditor,
-    Alignment,
-    Autoformat,
-    AutoImage,
-    Autosave,
-    BalloonToolbar,
-    Base64UploadAdapter,
-    BlockQuote,
-    Bold,
-    Bookmark,
-    Code,
-    CodeBlock,
-    Emoji,
-    Essentials,
-    FindAndReplace,
-    FontBackgroundColor,
-    FontColor,
-    FontFamily,
-    FontSize,
-    FullPage,
-    GeneralHtmlSupport,
-    Heading,
-    Highlight,
-    HorizontalLine,
-    HtmlComment,
-    HtmlEmbed,
-    ImageBlock,
-    ImageCaption,
-    ImageInline,
-    ImageInsert,
-    ImageInsertViaUrl,
-    ImageResize,
-    ImageStyle,
-    ImageTextAlternative,
-    ImageToolbar,
-    ImageUpload,
-    Indent,
-    IndentBlock,
-    Italic,
-    Link,
-    LinkImage,
-    List,
-    ListProperties,
-    Markdown,
-    MediaEmbed,
-    Mention,
-    PageBreak,
-    Paragraph,
-    PasteFromOffice,
-    RemoveFormat,
-    ShowBlocks,
-    SourceEditing,
-    SpecialCharacters,
-    SpecialCharactersArrows,
-    SpecialCharactersCurrency,
-    SpecialCharactersEssentials,
-    SpecialCharactersLatin,
-    SpecialCharactersMathematical,
-    SpecialCharactersText,
-    Strikethrough,
-    Style,
-    Subscript,
-    Superscript,
-    Table,
-    TableCaption,
-    TableCellProperties,
-    TableColumnResize,
-    TableProperties,
-    TableToolbar,
-    TextPartLanguage,
-    TextTransformation,
-    TodoList,
-    Underline,
-    WordCount
-} from 'ckeditor5';
-import '@/app/ckeditor5.css';
- 
-import { decode } from 'entities';
+  ClassicEditor,
+  Alignment,
+  Autoformat,
+  AutoImage,
+  Autosave,
+  BalloonToolbar,
+  Base64UploadAdapter,
+  BlockQuote,
+  Bold,
+  Bookmark,
+  Code,
+  CodeBlock,
+  Emoji,
+  Essentials,
+  FindAndReplace,
+  FontBackgroundColor,
+  FontColor,
+  FontFamily,
+  FontSize,
+  FullPage,
+  GeneralHtmlSupport,
+  Heading,
+  Highlight,
+  HorizontalLine,
+  HtmlComment,
+  HtmlEmbed,
+  ImageBlock,
+  ImageCaption,
+  ImageInline,
+  ImageInsert,
+  ImageInsertViaUrl,
+  ImageResize,
+  ImageStyle,
+  ImageTextAlternative,
+  ImageToolbar,
+  ImageUpload,
+  Indent,
+  IndentBlock,
+  Italic,
+  Link,
+  LinkImage,
+  List,
+  ListProperties,
+  Markdown,
+  MediaEmbed,
+  Mention,
+  PageBreak,
+  Paragraph,
+  PasteFromOffice,
+  RemoveFormat,
+  ShowBlocks,
+  SourceEditing,
+  SpecialCharacters,
+  SpecialCharactersArrows,
+  SpecialCharactersCurrency,
+  SpecialCharactersEssentials,
+  SpecialCharactersLatin,
+  SpecialCharactersMathematical,
+  SpecialCharactersText,
+  Strikethrough,
+  Style,
+  Subscript,
+  Superscript,
+  Table,
+  TableCaption,
+  TableCellProperties,
+  TableColumnResize,
+  TableProperties,
+  TableToolbar,
+  TextPartLanguage,
+  TextTransformation,
+  TodoList,
+  Underline,
+  WordCount,
+} from "ckeditor5";
+import "@/app/ckeditor5.css";
 
+import { decode } from "entities";
 
 /**
  * Create a free account with a trial: https://portal.ckeditor.com/checkout?plan=free
  */
-const LICENSE_KEY = 'GPL'; // or <YOUR_LICENSE_KEY>.
+const LICENSE_KEY = "GPL"; // or <YOUR_LICENSE_KEY>.
 
 export default function Editor({ onChange, initialData }) {
-    const editorContainerRef = useRef(null);
-    const editorRef = useRef(null);
-    const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const editorContainerRef = useRef(null);
+  const editorRef = useRef(null);
+  const [isLayoutReady, setIsLayoutReady] = useState(false);
 
-    useEffect(() => {
-        setIsLayoutReady(true);
+  useEffect(() => {
+    setIsLayoutReady(true);
 
-        return () => setIsLayoutReady(false);
-    }, []);
+    return () => setIsLayoutReady(false);
+  }, []);
 
-    const { editorConfig } = useMemo(() => {
-        if (!isLayoutReady) {
-            return {};
-        }
+  const { editorConfig } = useMemo(() => {
+    if (!isLayoutReady) {
+      return {};
+    }
 
-        return {
-            editorConfig: {
-                toolbar: {
-                    items: [
-                        'sourceEditing',
-                        'showBlocks',
-                        'findAndReplace',
-                        // 'textPartLanguage',
-                        '|',
-                        'heading',
-                        'style',
-                        '|',
-                        'fontSize',
-                        'fontFamily',
-                        'fontColor',
-                        'fontBackgroundColor',
-                        '|',
-                        'bold',
-                        'italic',
-                        'underline',
-                        'strikethrough',
-                        'subscript',
-                        'superscript',
-                        'code',
-                        'removeFormat',
-                        '|',
-                        'emoji',
-                        'specialCharacters',
-                        'horizontalLine',
-                        'pageBreak',
-                        'link',
-                        'bookmark',
-                        'insertImage',
-                        'mediaEmbed',
-                        'insertTable',
-                        'highlight',
-                        'blockQuote',
-                        'codeBlock',
-                        'htmlEmbed',
-                        '|',
-                        'alignment',
-                        '|',
-                        'bulletedList',
-                        'numberedList',
-                        'todoList',
-                        'outdent',
-                        'indent'
-                    ],
-                    shouldNotGroupWhenFull: false
-                },
-                plugins: [
-                    Alignment,
-                    Autoformat,
-                    AutoImage,
-                    Autosave,
-                    BalloonToolbar,
-                    Base64UploadAdapter,
-                    BlockQuote,
-                    Bold,
-                    Bookmark,
-                    Code,
-                    CodeBlock,
-                    Emoji,
-                    Essentials,
-                    FindAndReplace,
-                    FontBackgroundColor,
-                    FontColor,
-                    FontFamily,
-                    FontSize,
-                    FullPage,
-                    GeneralHtmlSupport,
-                    Heading,
-                    Highlight,
-                    HorizontalLine,
-                    HtmlComment,
-                    HtmlEmbed,
-                    ImageBlock,
-                    ImageCaption,
-                    ImageInline,
-                    ImageInsert,
-                    ImageInsertViaUrl,
-                    ImageResize,
-                    ImageStyle,
-                    ImageTextAlternative,
-                    ImageToolbar,
-                    ImageUpload,
-                    Indent,
-                    IndentBlock,
-                    Italic,
-                    Link,
-                    LinkImage,
-                    List,
-                    ListProperties,
-                    Markdown,
-                    MediaEmbed,
-                    Mention,
-                    PageBreak,
-                    Paragraph,
-                    PasteFromOffice,
-                    RemoveFormat,
-                    ShowBlocks,
-                    SourceEditing,
-                    SpecialCharacters,
-                    SpecialCharactersArrows,
-                    SpecialCharactersCurrency,
-                    SpecialCharactersEssentials,
-                    SpecialCharactersLatin,
-                    SpecialCharactersMathematical,
-                    SpecialCharactersText,
-                    Strikethrough,
-                    Style,
-                    Subscript,
-                    Superscript,
-                    Table,
-                    TableCaption,
-                    TableCellProperties,
-                    TableColumnResize,
-                    TableProperties,
-                    TableToolbar,
-                    TextPartLanguage,
-                    TextTransformation,
-                    TodoList,
-                    Underline,
-                    WordCount
-                ],
-                balloonToolbar: ['bold', 'italic', '|', 'link', 'insertImage', '|', 'bulletedList', 'numberedList'],
-                fontFamily: {
-                    supportAllValues: true
-                },
-                fontSize: {
-                    options: [10, 12, 14, 'default', 18, 20, 22],
-                    supportAllValues: true
-                },
-                heading: {
-                    options: [
-                        {
-                            model: 'paragraph',
-                            title: 'Paragraph',
-                            class: 'ck-heading_paragraph'
-                        },
-                        {
-                            model: 'heading1',
-                            view: 'h1',
-                            title: 'Heading 1',
-                            class: 'ck-heading_heading1'
-                        },
-                        {
-                            model: 'heading2',
-                            view: 'h2',
-                            title: 'Heading 2',
-                            class: 'ck-heading_heading2'
-                        },
-                        {
-                            model: 'heading3',
-                            view: 'h3',
-                            title: 'Heading 3',
-                            class: 'ck-heading_heading3'
-                        },
-                        {
-                            model: 'heading4',
-                            view: 'h4',
-                            title: 'Heading 4',
-                            class: 'ck-heading_heading4'
-                        },
-                        {
-                            model: 'heading5',
-                            view: 'h5',
-                            title: 'Heading 5',
-                            class: 'ck-heading_heading5'
-                        },
-                        {
-                            model: 'heading6',
-                            view: 'h6',
-                            title: 'Heading 6',
-                            class: 'ck-heading_heading6'
-                        }
-                    ]
-                },
-                htmlSupport: {
-                    allow: [
-                        {
-                            name: /^.*$/,
-                            styles: true,
-                            attributes: true,
-                            classes: true
-                        }
-                    ]
-                },
-                image: {
-                    toolbar: [
-                        'toggleImageCaption',
-                        'imageTextAlternative',
-                        '|',
-                        'imageStyle:inline',
-                        'imageStyle:wrapText',
-                        'imageStyle:breakText',
-                        '|',
-                        'resizeImage'
-                    ]
-                },
-                initialData: initialData && initialData != '' ? decode(initialData) : '',
-                licenseKey: LICENSE_KEY,
-                link: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://',
-                    decorators: {
-                        toggleDownloadable: {
-                            mode: 'manual',
-                            label: 'Downloadable',
-                            attributes: {
-                                download: 'file'
-                            }
-                        }
-                    }
-                },
-                list: {
-                    properties: {
-                        styles: true,
-                        startIndex: true,
-                        reversed: true
-                    }
-                },
-                
-                style: {
-                    definitions: [
-                        {
-                            name: 'Article category',
-                            element: 'h3',
-                            classes: ['category']
-                        },
-                        {
-                            name: 'Title',
-                            element: 'h2',
-                            classes: ['document-title']
-                        },
-                        {
-                            name: 'Subtitle',
-                            element: 'h3',
-                            classes: ['document-subtitle']
-                        },
-                        {
-                            name: 'Info box',
-                            element: 'p',
-                            classes: ['info-box']
-                        },
-                        {
-                            name: 'Side quote',
-                            element: 'blockquote',
-                            classes: ['side-quote']
-                        },
-                        {
-                            name: 'Marker',
-                            element: 'span',
-                            classes: ['marker']
-                        },
-                        {
-                            name: 'Spoiler',
-                            element: 'span',
-                            classes: ['spoiler']
-                        },
-                        {
-                            name: 'Code (dark)',
-                            element: 'pre',
-                            classes: ['fancy-code', 'fancy-code-dark']
-                        },
-                        {
-                            name: 'Code (bright)',
-                            element: 'pre',
-                            classes: ['fancy-code', 'fancy-code-bright']
-                        }
-                    ]
-                },
-                table: {
-                    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
-                }
-            }
-        };
-    }, [isLayoutReady]);
+    return {
+      editorConfig: {
+        toolbar: {
+          items: [
+            "sourceEditing",
+            "showBlocks",
+            "findAndReplace",
+            // 'textPartLanguage',
+            "|",
+            "heading",
+            "style",
+            "|",
+            "fontSize",
+            "fontFamily",
+            "fontColor",
+            "fontBackgroundColor",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "subscript",
+            "superscript",
+            "code",
+            "removeFormat",
+            "|",
+            "emoji",
+            "specialCharacters",
+            "horizontalLine",
+            "pageBreak",
+            "link",
+            "bookmark",
+            "insertImage",
+            "mediaEmbed",
+            "insertTable",
+            "highlight",
+            "blockQuote",
+            "codeBlock",
+            "htmlEmbed",
+            "|",
+            "alignment",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "todoList",
+            "outdent",
+            "indent",
+          ],
+          shouldNotGroupWhenFull: false,
+        },
+        plugins: [
+          Alignment,
+          Autoformat,
+          AutoImage,
+          Autosave,
+          BalloonToolbar,
+          Base64UploadAdapter,
+          BlockQuote,
+          Bold,
+          Bookmark,
+          Code,
+          CodeBlock,
+          Emoji,
+          Essentials,
+          FindAndReplace,
+          FontBackgroundColor,
+          FontColor,
+          FontFamily,
+          FontSize,
+          FullPage,
+          GeneralHtmlSupport,
+          Heading,
+          Highlight,
+          HorizontalLine,
+          HtmlComment,
+          HtmlEmbed,
+          ImageBlock,
+          ImageCaption,
+          ImageInline,
+          ImageInsert,
+          ImageInsertViaUrl,
+          ImageResize,
+          ImageStyle,
+          ImageTextAlternative,
+          ImageToolbar,
+          ImageUpload,
+          Indent,
+          IndentBlock,
+          Italic,
+          Link,
+          LinkImage,
+          List,
+          ListProperties,
+          Markdown,
+          MediaEmbed,
+          Mention,
+          PageBreak,
+          Paragraph,
+          PasteFromOffice,
+          RemoveFormat,
+          ShowBlocks,
+          SourceEditing,
+          SpecialCharacters,
+          SpecialCharactersArrows,
+          SpecialCharactersCurrency,
+          SpecialCharactersEssentials,
+          SpecialCharactersLatin,
+          SpecialCharactersMathematical,
+          SpecialCharactersText,
+          Strikethrough,
+          Style,
+          Subscript,
+          Superscript,
+          Table,
+          TableCaption,
+          TableCellProperties,
+          TableColumnResize,
+          TableProperties,
+          TableToolbar,
+          TextPartLanguage,
+          TextTransformation,
+          TodoList,
+          Underline,
+          WordCount,
+        ],
+        balloonToolbar: [
+          "bold",
+          "italic",
+          "|",
+          "link",
+          "insertImage",
+          "|",
+          "bulletedList",
+          "numberedList",
+        ],
+        fontFamily: {
+          supportAllValues: true,
+        },
+        fontSize: {
+          options: [10, 12, 14, "default", 18, 20, 22],
+          supportAllValues: true,
+        },
+        heading: {
+          options: [
+            {
+              model: "paragraph",
+              title: "Paragraph",
+              class: "ck-heading_paragraph",
+            },
+            {
+              model: "heading1",
+              view: "h1",
+              title: "Heading 1",
+              class: "ck-heading_heading1",
+            },
+            {
+              model: "heading2",
+              view: "h2",
+              title: "Heading 2",
+              class: "ck-heading_heading2",
+            },
+            {
+              model: "heading3",
+              view: "h3",
+              title: "Heading 3",
+              class: "ck-heading_heading3",
+            },
+            {
+              model: "heading4",
+              view: "h4",
+              title: "Heading 4",
+              class: "ck-heading_heading4",
+            },
+            {
+              model: "heading5",
+              view: "h5",
+              title: "Heading 5",
+              class: "ck-heading_heading5",
+            },
+            {
+              model: "heading6",
+              view: "h6",
+              title: "Heading 6",
+              class: "ck-heading_heading6",
+            },
+          ],
+        },
+        htmlSupport: {
+          allow: [
+            {
+              name: /^.*$/,
+              styles: true,
+              attributes: true,
+              classes: true,
+            },
+          ],
+        },
+        image: {
+          toolbar: [
+            "toggleImageCaption",
+            "imageTextAlternative",
+            "|",
+            "imageStyle:inline",
+            "imageStyle:wrapText",
+            "imageStyle:breakText",
+            "|",
+            "resizeImage",
+          ],
+        },
+        initialData:
+          initialData && initialData != "" ? decode(initialData) : "",
+        licenseKey: LICENSE_KEY,
+        link: {
+          addTargetToExternalLinks: true,
+          defaultProtocol: "https://",
+          decorators: {
+            toggleDownloadable: {
+              mode: "manual",
+              label: "Downloadable",
+              attributes: {
+                download: "file",
+              },
+            },
+          },
+        },
+        list: {
+          properties: {
+            styles: true,
+            startIndex: true,
+            reversed: true,
+          },
+        },
 
-    return (
-        <div  >
-            <div ref={editorContainerRef}>
-                <div ref={editorRef}>{editorConfig && <CKEditor editor={ClassicEditor} config={editorConfig} onChange={onChange} />}</div>
-            </div>
+        style: {
+          definitions: [
+            {
+              name: "Article category",
+              element: "h3",
+              classes: ["category"],
+            },
+            {
+              name: "Title",
+              element: "h2",
+              classes: ["document-title"],
+            },
+            {
+              name: "Subtitle",
+              element: "h3",
+              classes: ["document-subtitle"],
+            },
+            {
+              name: "Info box",
+              element: "p",
+              classes: ["info-box"],
+            },
+            {
+              name: "Side quote",
+              element: "blockquote",
+              classes: ["side-quote"],
+            },
+            {
+              name: "Marker",
+              element: "span",
+              classes: ["marker"],
+            },
+            {
+              name: "Spoiler",
+              element: "span",
+              classes: ["spoiler"],
+            },
+            {
+              name: "Code (dark)",
+              element: "pre",
+              classes: ["fancy-code", "fancy-code-dark"],
+            },
+            {
+              name: "Code (bright)",
+              element: "pre",
+              classes: ["fancy-code", "fancy-code-bright"],
+            },
+          ],
+        },
+        table: {
+          contentToolbar: [
+            "tableColumn",
+            "tableRow",
+            "mergeTableCells",
+            "tableProperties",
+            "tableCellProperties",
+          ],
+        },
+      },
+    };
+  }, [isLayoutReady]);
+
+  return (
+    <div>
+      <div ref={editorContainerRef}>
+        <div ref={editorRef}>
+          {editorConfig && (
+            <CKEditor
+              editor={ClassicEditor}
+              config={editorConfig}
+              onChange={onChange}
+            />
+          )}
         </div>
-    );
+      </div>
+    </div>
+  );
 }
-
 ```
 
  </details>
@@ -2158,11 +2185,11 @@ export default function Editor({ onChange, initialData }) {
 ```css
 /* Add this line after root declaration in ckeditor5.css file */
 .dark {
-	--ck-color-base-background: oklch(0.21 0.006 285.885);
-	--ck-color-base-border: oklch(1 0 0 / 10%);
-	--ck-color-base-text: hsl(0, 0%, 96%);
-	--ck-color-button-default-hover-background: oklch(0.541 0.281 293.009);
-} 
+  --ck-color-base-background: oklch(0.21 0.006 285.885);
+  --ck-color-base-border: oklch(1 0 0 / 10%);
+  --ck-color-base-text: hsl(0, 0%, 96%);
+  --ck-color-button-default-hover-background: oklch(0.541 0.281 293.009);
+}
 ```
 
  </details>
@@ -2170,7 +2197,7 @@ export default function Editor({ onChange, initialData }) {
 <details>
  <summary><code>Search.jsx</code></summary>
 
-```js 
+```js
 "use client";
 import { Input } from "@/components/ui/input";
 import { WEBSITE_SHOP } from "@/routes/WebsiteRoute";
@@ -2178,17 +2205,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 
-
 const Search = ({ isShow }) => {
-  const router = useRouter()
-  const [query, setQuery] = useState()
+  const router = useRouter();
+  const [query, setQuery] = useState();
   const handleSearch = () => {
-    router.push(`${WEBSITE_SHOP}?q=${query}`)
-  }
+    router.push(`${WEBSITE_SHOP}?q=${query}`);
+  };
   return (
     <div
-      className={`absolute border-t transition-all left-0 py-5 md:px-32 px-5 z-10 bg-white w-full ${isShow ? "top-18" : "-top-full "
-        }`}
+      className={`absolute border-t transition-all left-0 py-5 md:px-32 px-5 z-10 bg-white w-full ${
+        isShow ? "top-18" : "-top-full "
+      }`}
     >
       <div className="flex justify-between items-center relative">
         <Input
@@ -2196,7 +2223,11 @@ const Search = ({ isShow }) => {
           placeholder="Search..."
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button type="button" onClick={handleSearch} className="absolute right-3 cursor-pointer">
+        <button
+          type="button"
+          onClick={handleSearch}
+          className="absolute right-3 cursor-pointer"
+        >
           <IoSearchOutline size={20} className="text-gray-500" />
         </button>
       </div>
@@ -2205,120 +2236,110 @@ const Search = ({ isShow }) => {
 };
 
 export default Search;
-
 ```
 
 </details>
 
- # Search 
+# Search
 
- ```js 
-
+```js
 import {
-    ADMIN_CATEGORY_ADD,
-    ADMIN_CATEGORY_SHOW,
-    ADMIN_COUPON_ADD,
-    ADMIN_COUPON_SHOW,
-    ADMIN_CUSTOMERS_SHOW,
-    ADMIN_DASHBOARD,
-    ADMIN_MEDIA_SHOW,
-    ADMIN_ORDER_SHOW,
-    ADMIN_PRODUCT_ADD,
-    ADMIN_PRODUCT_SHOW,
-    ADMIN_PRODUCT_VARIANT_SHOW,
-    ADMIN_REVIEW_SHOW,
-
+  ADMIN_CATEGORY_ADD,
+  ADMIN_CATEGORY_SHOW,
+  ADMIN_COUPON_ADD,
+  ADMIN_COUPON_SHOW,
+  ADMIN_CUSTOMERS_SHOW,
+  ADMIN_DASHBOARD,
+  ADMIN_MEDIA_SHOW,
+  ADMIN_ORDER_SHOW,
+  ADMIN_PRODUCT_ADD,
+  ADMIN_PRODUCT_SHOW,
+  ADMIN_PRODUCT_VARIANT_SHOW,
+  ADMIN_REVIEW_SHOW,
 } from "@/routes/AdminPanelRoute";
 
 const searchData = [
-    {
-        label: "Dashboard",
-        description: "View website analytics and reports",
-        url: ADMIN_DASHBOARD,
-        keywords: ["dashboard", "overview", "analytics", "insights"]
-    },
-    {
-        label: "Category",
-        description: "Manage product categories",
-        url: ADMIN_CATEGORY_SHOW,
-        keywords: ["category", "product category"]
-    },
-    {
-        label: "Add Category",
-        description: "Add new product categories",
-        url: ADMIN_CATEGORY_ADD,
-        keywords: ["add category", "new category"]
-    },
-    {
-        label: "Product",
-        description: "Manage all product listings",
-        url: ADMIN_PRODUCT_SHOW,
-        keywords: ["products", "product list"]
-    },
-    {
-        label: "Add Product",
-        description: "Add a new product to the catalog",
-        url: ADMIN_PRODUCT_ADD,
-        keywords: ["new product", "add product"]
-    },
-    {
-        label: "Product Variant",
-        description: "Manage all product variants",
-        url: ADMIN_PRODUCT_VARIANT_SHOW,
-        keywords: ["products variants", "variants"]
-    },
-    {
-        label: "Coupon",
-        description: "Manage active discount coupons",
-        url: ADMIN_COUPON_SHOW,
-        keywords: ["discount", "promo", "coupon"]
-    },
-    {
-        label: "Add Coupon",
-        description: "Create a new discount coupon",
-        url: ADMIN_COUPON_ADD,
-        keywords: ["add coupon", "new coupon", "promotion", "offers"]
-    },
-    {
-        label: "Orders",
-        description: "Manage customer orders",
-        url: ADMIN_ORDER_SHOW,
-        keywords: ["orders"]
-    },
-    {
-        label: "Customers",
-        description: "View and manage customer information",
-        url: ADMIN_CUSTOMERS_SHOW,
-        keywords: ["customers", "users"]
-    },
-    {
-        label: "Review",
-        description: "Manage customer reviews and feedback",
-        url: ADMIN_REVIEW_SHOW,
-        keywords: ["ratings", "feedback"]
-    },
+  {
+    label: "Dashboard",
+    description: "View website analytics and reports",
+    url: ADMIN_DASHBOARD,
+    keywords: ["dashboard", "overview", "analytics", "insights"],
+  },
+  {
+    label: "Category",
+    description: "Manage product categories",
+    url: ADMIN_CATEGORY_SHOW,
+    keywords: ["category", "product category"],
+  },
+  {
+    label: "Add Category",
+    description: "Add new product categories",
+    url: ADMIN_CATEGORY_ADD,
+    keywords: ["add category", "new category"],
+  },
+  {
+    label: "Product",
+    description: "Manage all product listings",
+    url: ADMIN_PRODUCT_SHOW,
+    keywords: ["products", "product list"],
+  },
+  {
+    label: "Add Product",
+    description: "Add a new product to the catalog",
+    url: ADMIN_PRODUCT_ADD,
+    keywords: ["new product", "add product"],
+  },
+  {
+    label: "Product Variant",
+    description: "Manage all product variants",
+    url: ADMIN_PRODUCT_VARIANT_SHOW,
+    keywords: ["products variants", "variants"],
+  },
+  {
+    label: "Coupon",
+    description: "Manage active discount coupons",
+    url: ADMIN_COUPON_SHOW,
+    keywords: ["discount", "promo", "coupon"],
+  },
+  {
+    label: "Add Coupon",
+    description: "Create a new discount coupon",
+    url: ADMIN_COUPON_ADD,
+    keywords: ["add coupon", "new coupon", "promotion", "offers"],
+  },
+  {
+    label: "Orders",
+    description: "Manage customer orders",
+    url: ADMIN_ORDER_SHOW,
+    keywords: ["orders"],
+  },
+  {
+    label: "Customers",
+    description: "View and manage customer information",
+    url: ADMIN_CUSTOMERS_SHOW,
+    keywords: ["customers", "users"],
+  },
+  {
+    label: "Review",
+    description: "Manage customer reviews and feedback",
+    url: ADMIN_REVIEW_SHOW,
+    keywords: ["ratings", "feedback"],
+  },
 
-    {
-        label: "Media",
-        description: "Manage website media files",
-        url: ADMIN_MEDIA_SHOW,
-        keywords: ["images", "videos"]
-    },
-
+  {
+    label: "Media",
+    description: "Manage website media files",
+    url: ADMIN_MEDIA_SHOW,
+    keywords: ["images", "videos"],
+  },
 ];
 
 export default searchData;
+```
 
+# Demo Product Generator
 
-
- ```
-
-
-
- # Demo Product Generator 
-
- ```js 
-
+```js
 import { faker } from "@faker-js/faker";
 import mongoose from "mongoose";
 
@@ -2330,104 +2351,95 @@ import ProductVariantModel from "@/models/ProductVariant.model";
 import { connectDB } from "@/lib/databaseConnection";
 import MediaModel from "@/models/Media.model";
 function getRandomItems(array, count = 1) {
-    const shuffled = [...array].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
+  const shuffled = [...array].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
 }
 export async function POST(req) {
-
-    await connectDB();
-    try {
-        // Fetch all categories
-        const categories = await CategoryModel.find();
-        if (categories.length === 0) {
-            return res.status(400).json({ message: "No categories found!" });
-        }
-
-        const mediaList = await MediaModel.find();
-        const mediaMap = [];
-        mediaList.forEach(media => {
-            mediaMap.push(media._id);
-        });
-
-        const colors = ["Red", "Blue", "Green", "Black"];
-        const sizes = ["S", "M", "L", "XL", "2XL"];
-
-        let products = [];
-        let variants = [];
-
-        for (const category of categories) {
-
-
-            for (let i = 0; i < 5; i++) {
-
-                const mrp = Number(faker.commerce.price(500, 2000, 0));
-                const discountPercentage = faker.number.int({ min: 10, max: 50 });
-                const sellingPrice = Math.round(mrp - (mrp * discountPercentage) / 100);
-
-
-                const productId = new mongoose.Types.ObjectId();
-                const selectedMedia = getRandomItems(mediaMap, 4);
-                const product = {
-                    _id: productId,
-                    name: faker.commerce.productName(),
-                    slug: faker.lorem.slug(),
-                    category: category._id,
-                    mrp: mrp,
-                    sellingPrice: sellingPrice,
-                    discountPercentage: discountPercentage,
-                    media: selectedMedia,
-                    description: faker.commerce.productDescription(),
-                    deletedAt: null,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                };
-
-                products.push(product);
-
-                // Generate 20 variants (4 colors x 5 sizes)
-                for (const color of colors) {
-                    for (const size of sizes) {
-
-                        const variantMedia = getRandomItems(mediaMap, 4);
-                        variants.push({
-                            _id: new mongoose.Types.ObjectId(),
-                            product: productId,
-                            color,
-                            size,
-                            mrp: product.mrp,
-                            sellingPrice: product.sellingPrice,
-                            discountPercentage: product.discountPercentage,
-                            sku: `${product.slug}-${color}-${size}-${faker.number.int({ min: 1000, max: 9999 })}`,
-                            stock: faker.number.int({ min: 10, max: 100 }),
-                            media: variantMedia,
-                            deletedAt: null,
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        });
-                    }
-                }
-            }
-        }
-
-        // Insert data into MongoDB
-        await ProductModel.insertMany(products);
-        await ProductVariantModel.insertMany(variants);
-
-        return response(true, 200, 'Fake data generated successfully.')
-
-    } catch (error) {
-        return response(false, 500, error.message)
-
+  await connectDB();
+  try {
+    // Fetch all categories
+    const categories = await CategoryModel.find();
+    if (categories.length === 0) {
+      return res.status(400).json({ message: "No categories found!" });
     }
+
+    const mediaList = await MediaModel.find();
+    const mediaMap = [];
+    mediaList.forEach((media) => {
+      mediaMap.push(media._id);
+    });
+
+    const colors = ["Red", "Blue", "Green", "Black"];
+    const sizes = ["S", "M", "L", "XL", "2XL"];
+
+    let products = [];
+    let variants = [];
+
+    for (const category of categories) {
+      for (let i = 0; i < 5; i++) {
+        const mrp = Number(faker.commerce.price(500, 2000, 0));
+        const discountPercentage = faker.number.int({ min: 10, max: 50 });
+        const sellingPrice = Math.round(mrp - (mrp * discountPercentage) / 100);
+
+        const productId = new mongoose.Types.ObjectId();
+        const selectedMedia = getRandomItems(mediaMap, 4);
+        const product = {
+          _id: productId,
+          name: faker.commerce.productName(),
+          slug: faker.lorem.slug(),
+          category: category._id,
+          mrp: mrp,
+          sellingPrice: sellingPrice,
+          discountPercentage: discountPercentage,
+          media: selectedMedia,
+          description: faker.commerce.productDescription(),
+          deletedAt: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        products.push(product);
+
+        // Generate 20 variants (4 colors x 5 sizes)
+        for (const color of colors) {
+          for (const size of sizes) {
+            const variantMedia = getRandomItems(mediaMap, 4);
+            variants.push({
+              _id: new mongoose.Types.ObjectId(),
+              product: productId,
+              color,
+              size,
+              mrp: product.mrp,
+              sellingPrice: product.sellingPrice,
+              discountPercentage: product.discountPercentage,
+              sku: `${product.slug}-${color}-${size}-${faker.number.int({
+                min: 1000,
+                max: 9999,
+              })}`,
+              stock: faker.number.int({ min: 10, max: 100 }),
+              media: variantMedia,
+              deletedAt: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
+          }
+        }
+      }
+    }
+
+    // Insert data into MongoDB
+    await ProductModel.insertMany(products);
+    await ProductVariantModel.insertMany(variants);
+
+    return response(true, 200, "Fake data generated successfully.");
+  } catch (error) {
+    return response(false, 500, error.message);
+  }
 }
+```
 
+## Other Page
 
- ```
-
-
- ## Other Page 
-
- 
  <details>
   <summary><code>About Page</code> </summary>
  
@@ -2436,22 +2448,22 @@ import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrum
 import React from 'react'
 
 const breadcrumb = {
-  title: 'About',
-  links: [
-    { label: 'About' },
-  ]
+title: 'About',
+links: [
+{ label: 'About' },
+]
 }
 const AboutUs = () => {
-  return (
-    <div>
-      <WebsiteBreadcrumb props={breadcrumb} />
-      <div className='lg:px-40 px-5 py-20'>
-        <h1 className='text-xl font-semibold mb-3'>About Us</h1>
-        <p>Welcome to E-store, your one-stop destination for quality, convenience, and innovation in online shopping.</p>
-        <p>Founded with a mission to redefine the eCommerce experience, we are passionate about bringing you a carefully curated selection of products that meet your everyday needs—whether it's fashion, electronics, home essentials, beauty, or lifestyle goods. Our goal is to deliver not just products, but value, trust, and a seamless shopping journey.</p>
-        <p className='mt-5'>What sets us apart is our commitment to:</p>
-        <ul className='list-disc ps-10 mt-3'>
-          <li> <b> Customer Satisfaction:</b> Your happiness is our priority. From browsing to checkout, we’re here to make your shopping experience effortless and enjoyable.</li>
+return (
+<div>
+<WebsiteBreadcrumb props={breadcrumb} />
+<div className='lg:px-40 px-5 py-20'>
+<h1 className='text-xl font-semibold mb-3'>About Us</h1>
+<p>Welcome to E-store, your one-stop destination for quality, convenience, and innovation in online shopping.</p>
+<p>Founded with a mission to redefine the eCommerce experience, we are passionate about bringing you a carefully curated selection of products that meet your everyday needs—whether it's fashion, electronics, home essentials, beauty, or lifestyle goods. Our goal is to deliver not just products, but value, trust, and a seamless shopping journey.</p>
+<p className='mt-5'>What sets us apart is our commitment to:</p>
+<ul className='list-disc ps-10 mt-3'>
+<li> <b> Customer Satisfaction:</b> Your happiness is our priority. From browsing to checkout, we’re here to make your shopping experience effortless and enjoyable.</li>
 
           <li>  <b> Quality & Affordability: </b>We partner directly with trusted suppliers and brands to offer high-quality products at competitive prices.</li>
 
@@ -2467,80 +2479,82 @@ const AboutUs = () => {
         </p>
       </div>
     </div>
-  )
+
+)
 }
 
 export default AboutUs
 
- ```
- </details>
- 
- <details>
-  <summary><code>Privacy Policy</code> </summary>
-  
+````
+</details>
+
+<details>
+ <summary><code>Privacy Policy</code> </summary>
+
 ```js
 import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrumb'
 import React from 'react'
 
 const breadcrumb = {
-    title: 'Privacy Policy',
-    links: [
-        { label: 'Privacy Policy' },
-    ]
+   title: 'Privacy Policy',
+   links: [
+       { label: 'Privacy Policy' },
+   ]
 }
 
 const PrivacyPolicy = () => {
-    return (
-        <div>
-            <WebsiteBreadcrumb props={breadcrumb} />
-            <div className='lg:px-40 px-5 py-20'>
-                <h1 className='text-xl font-semibold mb-3'>Privacy Policy</h1>
-                <p>
-                    At E-store, we are committed to protecting your privacy and ensuring that your personal information is handled in a safe and responsible manner.
-                </p>
+   return (
+       <div>
+           <WebsiteBreadcrumb props={breadcrumb} />
+           <div className='lg:px-40 px-5 py-20'>
+               <h1 className='text-xl font-semibold mb-3'>Privacy Policy</h1>
+               <p>
+                   At E-store, we are committed to protecting your privacy and ensuring that your personal information is handled in a safe and responsible manner.
+               </p>
 
-                <p className='mt-3'>
-                    This Privacy Policy outlines how we collect, use, and safeguard your information when you visit our website or make a purchase.
-                </p>
+               <p className='mt-3'>
+                   This Privacy Policy outlines how we collect, use, and safeguard your information when you visit our website or make a purchase.
+               </p>
 
-                <p className='mt-5'>Information We Collect:</p>
-                <ul className='list-disc ps-10 mt-3'>
-                    <li><b>Personal Information:</b> Such as your name, email address, phone number, and shipping/billing addresses, provided during account registration or checkout.</li>
-                    <li><b>Payment Details:</b> Collected securely through encrypted payment gateways.</li>
-                    <li><b>Usage Data:</b> Including your browser type, IP address, pages visited, and time spent on the site to help us improve user experience.</li>
-                </ul>
+               <p className='mt-5'>Information We Collect:</p>
+               <ul className='list-disc ps-10 mt-3'>
+                   <li><b>Personal Information:</b> Such as your name, email address, phone number, and shipping/billing addresses, provided during account registration or checkout.</li>
+                   <li><b>Payment Details:</b> Collected securely through encrypted payment gateways.</li>
+                   <li><b>Usage Data:</b> Including your browser type, IP address, pages visited, and time spent on the site to help us improve user experience.</li>
+               </ul>
 
-                <p className='mt-5'>How We Use Your Information:</p>
-                <ul className='list-disc ps-10 mt-3'>
-                    <li>To process your orders and provide customer support.</li>
-                    <li>To personalize your shopping experience and improve our services.</li>
-                    <li>To send order updates, promotional offers, and newsletters (you may opt out at any time).</li>
-                    <li>To ensure our website is secure and functioning properly.</li>
-                </ul>
+               <p className='mt-5'>How We Use Your Information:</p>
+               <ul className='list-disc ps-10 mt-3'>
+                   <li>To process your orders and provide customer support.</li>
+                   <li>To personalize your shopping experience and improve our services.</li>
+                   <li>To send order updates, promotional offers, and newsletters (you may opt out at any time).</li>
+                   <li>To ensure our website is secure and functioning properly.</li>
+               </ul>
 
-                <p className='mt-5'>
-                    We do not sell, rent, or share your personal information with third parties, except when necessary to fulfill your order or comply with legal obligations.
-                </p>
+               <p className='mt-5'>
+                   We do not sell, rent, or share your personal information with third parties, except when necessary to fulfill your order or comply with legal obligations.
+               </p>
 
-                <p className='mt-3'>
-                    By using our website, you consent to the practices outlined in this Privacy Policy. We may update this policy from time to time, and any changes will be reflected on this page.
-                </p>
+               <p className='mt-3'>
+                   By using our website, you consent to the practices outlined in this Privacy Policy. We may update this policy from time to time, and any changes will be reflected on this page.
+               </p>
 
-                <p className='mt-3'>
-                    If you have any questions or concerns regarding our Privacy Policy, please contact our support team.
-                </p>
+               <p className='mt-3'>
+                   If you have any questions or concerns regarding our Privacy Policy, please contact our support team.
+               </p>
 
-                <p className='mt-3'>
-                    Thank you for trusting E-store. Your privacy is important to us.
-                </p>
-            </div>
-        </div>
-    )
+               <p className='mt-3'>
+                   Thank you for trusting E-store. Your privacy is important to us.
+               </p>
+           </div>
+       </div>
+   )
 }
 
 export default PrivacyPolicy
 
-```
+````
+
  </details>
  
  <details>
@@ -2551,18 +2565,18 @@ import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrum
 import React from 'react'
 
 const breadcrumb = {
-    title: 'Terms & Conditions',
-    links: [
-        { label: 'Terms & Conditions' },
-    ]
+title: 'Terms & Conditions',
+links: [
+{ label: 'Terms & Conditions' },
+]
 }
 
 const TermsAndConditions = () => {
-    return (
-        <div>
-            <WebsiteBreadcrumb props={breadcrumb} />
-            <div className='lg:px-40 px-5 py-20'>
-                <h1 className='text-xl font-semibold mb-3'>Terms & Conditions</h1>
+return (
+<div>
+<WebsiteBreadcrumb props={breadcrumb} />
+<div className='lg:px-40 px-5 py-20'>
+<h1 className='text-xl font-semibold mb-3'>Terms & Conditions</h1>
 
                 <p>Welcome to E-store. By accessing or using our website, you agree to be bound by the following terms and conditions. Please read them carefully.</p>
 
@@ -2617,9 +2631,11 @@ const TermsAndConditions = () => {
             </div>
         </div>
     )
+
 }
 
 export default TermsAndConditions
 
 ```
  </details>
+```
