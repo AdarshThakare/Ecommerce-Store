@@ -34,19 +34,19 @@ export const AdminAppSidebarMenu = [
     icon: IoShirtOutline,
     subMenu: [
       {
-        title: "Add Profuct",
+        title: "Add Product",
         url: "#",
       },
       {
-        title: "Add Profuct Variant",
+        title: "Add Product Variant",
         url: "#",
       },
       {
-        title: "All Profucts",
+        title: "All Products",
         url: "#",
       },
       {
-        title: "All Profuct Variants",
+        title: "All Product Variants",
         url: "#",
       },
     ],
