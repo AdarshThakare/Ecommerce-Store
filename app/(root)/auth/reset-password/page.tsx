@@ -29,11 +29,12 @@ import { carme } from "@/lib/fonts";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
 import OTPVerification from "@/components/application/OTPVerification";
+import UpdatePage from "@/components/application/UpdatePassword";
 
 const ResetPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [otpEmail, setOtpEmail] = useState<string>("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
 
   const [otpVerificationLoading, setOTPVerificationLoading] = useState(false);
 
@@ -48,9 +49,32 @@ const ResetPasswordPage = () => {
     },
   });
 
-  const handleEmailVerification = async (
-    values: z.infer<typeof formSchema>
-  ) => {};
+  const handleEmailVerification = async (value: z.infer<typeof formSchema>) => {
+    console.log("The entered email is - ", value);
+
+    try {
+      setIsLoading(true);
+      const { data: sendOtpResponse } = await axios.post(
+        "/api/auth/reset-password/send-otp",
+        value
+      );
+
+      if (!sendOtpResponse.success) {
+        throw new Error(sendOtpResponse.message);
+      }
+
+      setOtpEmail(value.email);
+      showToast("success", sendOtpResponse.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        showToast("error", err.message);
+      } else {
+        showToast("error", "An unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   //Handling OTP Verification
   const handleOTPVerification = async (value: z.infer<typeof formSchema>) => {
@@ -59,16 +83,14 @@ const ResetPasswordPage = () => {
     try {
       setOTPVerificationLoading(true);
       const { data: OTPResponse } = await axios.post(
-        "/api/auth/verify-otp",
+        "/api/auth/reset-password/verify-otp",
         value
       );
 
       if (!OTPResponse.success) {
         throw new Error(OTPResponse.message);
       }
-
-      setOtpEmail("");
-      form.reset();
+      setIsOtpVerified(true);
       showToast("success", OTPResponse.message);
     } catch (err) {
       if (err instanceof Error) {
@@ -165,11 +187,15 @@ const ResetPasswordPage = () => {
             </>
           ) : (
             <>
-              <OTPVerification
-                email={otpEmail}
-                isLoading={otpVerificationLoading}
-                onSubmit={handleOTPVerification}
-              />
+              {!isOtpVerified ? (
+                <OTPVerification
+                  email={otpEmail}
+                  isLoading={otpVerificationLoading}
+                  onSubmit={handleOTPVerification}
+                />
+              ) : (
+                <UpdatePage email={otpEmail} />
+              )}
             </>
           )}
         </CardContent>

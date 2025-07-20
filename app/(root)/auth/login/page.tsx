@@ -262,7 +262,8 @@ const LoginPage = () => {
               </div>
             </>
           ) : (
-            <>
+              <>
+         
               <OTPVerification
                 email={otpEmail}
                 isLoading={otpVerificationLoading}
