@@ -140,6 +140,10 @@ const LoginPage = () => {
             ? router.push(ADMIN_DASHBOARD)
             : router.push(USER_DASHBOARD);
         }
+      } else {
+        OTPResponse.data.role === "admin"
+          ? router.push(ADMIN_DASHBOARD)
+          : router.push(USER_DASHBOARD);
       }
     } catch (err) {
       if (err instanceof Error) {
